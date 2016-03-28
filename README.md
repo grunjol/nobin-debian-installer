@@ -11,7 +11,7 @@ Installation:
 npm install nobin-debian-installer --save-dev
 ```
 
-Once installed, it may be executed with this line of JavaScript:
+Once installed, it may be executed with:
 
 ### Usage
 
