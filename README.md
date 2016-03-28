@@ -17,7 +17,7 @@ Once installed, it may be executed with this line of JavaScript:
 
 ```js
 
-var deb = require('nobin-debian-installer --save-dev')
+var deb = require('nobin-debian-installer')()
 
 var definition = {
   package: require('./package.json'), // needed for extracting project info
