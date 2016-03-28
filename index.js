@@ -45,8 +45,8 @@ Deb.prototype.pack = function (definition, files, callback) {
 
         // remove temp files
         async.parallel([
-          // fs.unlink.bind(fs, './control.tar.gz'),
-          // fs.unlink.bind(fs, './data.tar.gz'),
+          fs.unlink.bind(fs, './control.tar.gz'),
+          fs.unlink.bind(fs, './data.tar.gz'),
           fs.unlink.bind(fs, './debian-binary')
         ], done)
       })
