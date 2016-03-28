@@ -1,0 +1,34 @@
+{
+  "name": "nobin-debian-installer",
+  "version": "0.0.1",
+  "description": "Create deb packages with no binary dependencies",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grunjol/nobin-debian-installer.git"
+  },
+  "keywords": [
+    "deb",
+    "debian",
+    "installer",
+    "cross-platform"
+  ],
+  "author": "grunjol",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grunjol/nobin-debian-installer/issues"
+  },
+  "homepage": "https://github.com/grunjol/nobin-debian-installer#readme",
+  "dependencies": {
+    "ar-async": "^0.1.4",
+    "async": "^2.0.0-rc.2",
+    "glob-expand": "^0.1.0",
+    "tar-stream": "^1.3.2"
+  },
+  "devDependencies": {
+    "standard": "^6.0.8"
+  }
+}
