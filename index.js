@@ -108,7 +108,8 @@ function buildControlFile (definition, callback) {
             debug('adding script ', scriptName)
             self.control.entry({
               name: './' + scriptName,
-              size: stats.size
+              size: stats.size,
+              mode: 0755
             }, data, wtfDone)
           }
         ], doneScript)
