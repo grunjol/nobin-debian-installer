@@ -28,8 +28,8 @@ var definition = {
     scripts: {
       preinst: './deb/scripts/preinst', // optional pre install script
       postinst: './deb/scripts/postinst', // optional post install script
-      prerem: './deb/scripts/prerem', // optional pre remove script
-      postrem: './deb/scripts/postrem', // optional post remove script
+      prerm: './deb/scripts/prerm', // optional pre remove script
+      postrm: './deb/scripts/postrm', // optional post remove script
     }
   }
 }
