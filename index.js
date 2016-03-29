@@ -68,7 +68,7 @@ function buildControlFile (definition, callback) {
     Priority: 'optional',
     Architecture: definition.info.arch || 'all',
     Depends: '',
-    Maintainer: (definition.package.author ? (definition.package.author.name + ' ' + definition.package.author.email) : ''),
+    Maintainer: (definition.package.author ? (definition.package.author.name + ' <' + definition.package.author.email + '>') : ''),
     Description: definition.package.description
   }
 
