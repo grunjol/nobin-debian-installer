@@ -72,6 +72,11 @@ function buildControlFile (definition, callback) {
     Description: definition.package.description
   }
 
+  // optional items
+  if (definition.package.license) {
+    self.controlFile.License = definition.package.license
+  }
+
   // create the control file
   async.parallel([
     function createControlFile (prlDone) {
