@@ -60,6 +60,13 @@ Deb.prototype.pack = function (definition, files, callback) {
 function buildControlFile (definition, callback) {
   var self = this
 
+  var author = ''
+  if (definition.package.author) {
+    author = typeof definition.package.author === 'string'
+      ? definition.package.author
+      : definition.package.author.name + ' <' + definition.package.author.email + '>'
+  }
+
   self.controlFile = {
     Package: definition.info.name || definition.package.name,
     Version: definition.package.version + '-' + (definition.info.rev || '1'),
@@ -67,15 +74,23 @@ function buildControlFile (definition, callback) {
     Section: 'misc',
     Priority: 'optional',
     Architecture: definition.info.arch || 'all',
-    Depends: '',
-    Maintainer: (definition.package.author ? (definition.package.author.name + ' <' + definition.package.author.email + '>') : ''),
-    Description: definition.package.description
+    Depends: 'lsb-base (>= 3.2)',
+    Maintainer: author
   }
 
   // optional items
   if (definition.package.license) {
     self.controlFile.License = definition.package.license
   }
+
+  // optional items
+  if (definition.package.homepage) {
+    self.controlFile.Homepage = definition.package.homepage
+  }
+
+  self.controlFile.Description = definition.package.description + '\n ' +
+    (definition.info.name || definition.package.name) +
+    ': ' + definition.package.description
 
   // create the control file
   async.parallel([
@@ -114,7 +129,7 @@ function buildControlFile (definition, callback) {
             self.control.entry({
               name: './' + scriptName,
               size: stats.size,
-              mode: 0755
+              mode: '0755'
             }, data, wtfDone)
           }
         ], doneScript)
@@ -214,7 +229,7 @@ function addParentDirs (tarball, dir, createdDirs, callback) {
   function addDir () {
     if (!createdDirs[dir]) {
       createdDirs[dir] = 1
-      tarball.entry({name: '.' + dir, type: 'directory'}, callback)
+      tarball.entry({name: '.' + dir + '/', type: 'directory'}, callback)
     } else {
       callback()
     }
