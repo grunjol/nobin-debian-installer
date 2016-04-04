@@ -26,6 +26,7 @@ var definition = {
     arch: 'amd64', // optional architecture type
     name: 'my-package' // optional package name 
     targetDir: './dist', // optional folder where to build the .deb package
+    targetName: 'my-package', // optional .deb filename
     scripts: {
       preinst: './deb/scripts/preinst', // optional pre install script
       postinst: './deb/scripts/postinst', // optional post install script
