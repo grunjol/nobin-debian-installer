@@ -29,7 +29,8 @@ Deb.prototype.pack = function (definition, files, callback) {
       fs.writeFile('./debian-binary', '2.0\n', done)
     },
     function buildPackage (done) {
-      var pkgName = './' + self.controlFile.Package + '_' + self.controlFile.Version +
+      var pkgName = definition.info.targetName ||
+        './' + self.controlFile.Package + '_' + self.controlFile.Version +
         '_' + self.controlFile.Architecture + '.deb'
 
       var pkgPath = path.resolve(path.join(definition.info.targetDir || '', pkgName))
