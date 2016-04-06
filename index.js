@@ -129,7 +129,7 @@ function buildControlFile (definition, callback) {
             self.control.entry({
               name: './' + scriptName,
               size: stats.size,
-              mode: '0755'
+              mode: parseInt('755', 8)
             }, data, wtfDone)
           }
         ], doneScript)
