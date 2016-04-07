@@ -70,11 +70,11 @@ function buildControlFile (definition, callback) {
   self.controlFile = {
     Package: definition.info.name || definition.package.name,
     Version: definition.package.version + '-' + (definition.info.rev || '1'),
-    'Installed-Size': self.pkgSize,
+    'Installed-Size': Math.ceil(self.pkgSize / 1024),
     Section: 'misc',
     Priority: 'optional',
     Architecture: definition.info.arch || 'all',
-    Depends: 'lsb-base (>= 3.2)',
+    Depends: definition.info.depends || 'lsb-base (>= 3.2)',
     Maintainer: author
   }
 
@@ -229,7 +229,8 @@ function addParentDirs (tarball, dir, createdDirs, callback) {
   function addDir () {
     if (!createdDirs[dir]) {
       createdDirs[dir] = 1
-      tarball.entry({name: '.' + dir + '/', type: 'directory'}, callback)
+      var name = dir === '/' ? './.' : '.' + dir + '/'
+      tarball.entry({name: name, type: 'directory'}, callback)
     } else {
       callback()
     }
