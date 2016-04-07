@@ -24,7 +24,8 @@ var definition = {
   info: {
     rev: '512', // optional revision number
     arch: 'amd64', // optional architecture type
-    name: 'my-package' // optional package name 
+    name: 'my-package', // optional package name
+    depends: 'libc6 (>= 2.4)', // optional dependency list
     targetDir: './dist', // optional folder where to build the .deb package
     scripts: {
       preinst: './deb/scripts/preinst', // optional pre install script
