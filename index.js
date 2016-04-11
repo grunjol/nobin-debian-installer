@@ -22,11 +22,14 @@ function Deb () {
 Deb.prototype.pack = function (definition, files, callback) {
   var self = this
 
+  var tempPath = path.resolve(path.join(definition.info.targetDir || '.', 'nbd' + Math.floor(Math.random() * 100000)))
+
   async.series([
-    packFiles.bind(this, expandFiles(files)),
-    buildControlFile.bind(this, definition),
+    fs.mkdir.bind(fs, tempPath),
+    packFiles.bind(this, tempPath, expandFiles(files)),
+    buildControlFile.bind(this, tempPath, definition),
     function buildDebBinFile (done) {
-      fs.writeFile('./debian-binary', '2.0\n', done)
+      fs.writeFile(path.join(tempPath, 'debian-binary'), '2.0\n', done)
     },
     function buildPackage (done) {
       var pkgName = './' + self.controlFile.Package + '_' + self.controlFile.Version +
@@ -37,17 +40,18 @@ Deb.prototype.pack = function (definition, files, callback) {
       debug('creating %s package', pkgPath)
       var writer = new ar.ArWriter(pkgPath, {variant: 'gnu'})
       writer.writeEntries([
-        './debian-binary',
-        './control.tar.gz',
-        './data.tar.gz'
+        path.join(tempPath, 'debian-binary'),
+        path.join(tempPath, 'control.tar.gz'),
+        path.join(tempPath, 'data.tar.gz')
       ], function (err) {
         if (err) debug('failed to write .deb file')
 
         // remove temp files
         async.parallel([
-          fs.unlink.bind(fs, './control.tar.gz'),
-          fs.unlink.bind(fs, './data.tar.gz'),
-          fs.unlink.bind(fs, './debian-binary')
+          fs.unlink.bind(fs, path.join(tempPath, 'control.tar.gz')),
+          fs.unlink.bind(fs, path.join(tempPath, 'data.tar.gz')),
+          fs.unlink.bind(fs, path.join(tempPath, 'debian-binary')),
+          fs.rmdir.bind(fs, tempPath)
         ], done)
       })
     }
@@ -57,7 +61,7 @@ Deb.prototype.pack = function (definition, files, callback) {
 /**
  * Build the control part of the .deb package.
  */
-function buildControlFile (definition, callback) {
+function buildControlFile (tempPath, definition, callback) {
   var self = this
 
   var author = ''
@@ -145,7 +149,7 @@ function buildControlFile (definition, callback) {
 
     self.control.finalize()
 
-    var file = fs.createWriteStream(path.resolve('./' + 'control.tar.gz'))
+    var file = fs.createWriteStream(path.join(tempPath, 'control.tar.gz'))
     file.on('finish', callback)
 
     var compress = zlib.createGzip()
@@ -159,7 +163,7 @@ function buildControlFile (definition, callback) {
  *
  * @param files - an object with the following format {'path/to/source/dir': 'path/to/target/dir'} (e.g. {'../../src/lib': '/srv/productName/lib'})
  */
-function packFiles (files, callback) {
+function packFiles (tempPath, files, callback) {
   var self = this
 
   async.eachSeries(files, function (crtFile, done) {
@@ -203,7 +207,7 @@ function packFiles (files, callback) {
     } else {
       debug('successfully added files to .deb package')
 
-      var file = fs.createWriteStream(path.resolve('./' + 'data.tar.gz'))
+      var file = fs.createWriteStream(path.join(tempPath, 'data.tar.gz'))
       file.on('finish', callback)
 
       var compress = zlib.createGzip()
