@@ -51,8 +51,10 @@ Deb.prototype.pack = function (definition, files, callback) {
           fs.unlink.bind(fs, path.join(tempPath, 'control.tar.gz')),
           fs.unlink.bind(fs, path.join(tempPath, 'data.tar.gz')),
           fs.unlink.bind(fs, path.join(tempPath, 'debian-binary')),
-          fs.rmdir.bind(fs, tempPath)
-        ], done)
+        ], function (err) {
+          fs.rmdir(tempPath)
+          done()
+        })
       })
     }
   ], callback)
