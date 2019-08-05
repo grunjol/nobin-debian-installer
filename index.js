@@ -1,5 +1,6 @@
 var tar = require('tar-stream')
 var fs = require('fs')
+var mkdirp = require('mkdirp')
 var path = require('path')
 var async = require('async')
 var ar = require('ar-async')
@@ -25,7 +26,7 @@ Deb.prototype.pack = function (definition, files, callback) {
   var tempPath = path.resolve(path.join(definition.info.targetDir || '.', 'nbd' + Math.floor(Math.random() * 100000)))
 
   async.series([
-    fs.mkdir.bind(fs, tempPath),
+    mkdirp.bind(mkdirp, tempPath),
     packFiles.bind(this, tempPath, expandFiles(files)),
     buildControlFile.bind(this, tempPath, definition),
     function buildDebBinFile (done) {
