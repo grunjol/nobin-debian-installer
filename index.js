@@ -39,7 +39,7 @@ Deb.prototype.pack = function (definition, files, callback) {
       var pkgPath = path.resolve(path.join(definition.info.targetDir || '', pkgName))
 
       debug('creating %s package', pkgPath)
-      var writer = new ar.ArWriter(pkgPath, {variant: 'gnu'})
+      var writer = new ar.ArWriter(pkgPath, { variant: 'gnu' })
       writer.writeEntries([
         path.join(tempPath, 'debian-binary'),
         path.join(tempPath, 'control.tar.gz'),
@@ -112,14 +112,14 @@ function buildControlFile (tempPath, definition, callback) {
           return prlDone(err)
         }
 
-        self.control.entry({name: './control'}, controlHeader, prlDone)
+        self.control.entry({ name: './control' }, controlHeader, prlDone)
       })
     }, function createHashFile (prlDone) {
       var fileContent = ''
       for (var i = 0; i < self.filesMd5.length; i++) {
         fileContent += self.filesMd5[i].md5 + '  ' + self.filesMd5[i].path.replace(/^\W*/, '') + '\n'
       }
-      self.control.entry({name: './md5sums'}, fileContent, prlDone)
+      self.control.entry({ name: './md5sums' }, fileContent, prlDone)
     }, function addScripts (prlDone) {
       async.forEachOf(definition.info.scripts, function (path, scriptName, doneScript) {
         debug('processing script ', path)
@@ -237,7 +237,7 @@ function addParentDirs (tarball, dir, createdDirs, callback) {
     if (!createdDirs[dir]) {
       createdDirs[dir] = 1
       var name = dir === '/' ? './.' : '.' + dir + '/'
-      tarball.entry({name: name, type: 'directory'}, callback)
+      tarball.entry({ name: name, type: 'directory' }, callback)
     } else {
       callback()
     }
