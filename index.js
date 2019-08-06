@@ -6,6 +6,7 @@ var async = require('async')
 var ar = require('ar-async')
 var crypto = require('crypto')
 var zlib = require('zlib')
+var glob = require('glob')
 var debug = require('debug')('nobin-debian-installer')
 
 /**
@@ -245,17 +246,20 @@ function addParentDirs (tarball, dir, createdDirs, callback) {
 }
 
 function expandFiles (files) {
-  var expand = require('glob-expand')
   var expandedFiles = []
+
   files.map(function (file) {
-    var sources = expand(file, file.src)
-    sources.map(function (source) {
-      expandedFiles.push({
-        src: [path.join((file.cwd ? file.cwd : ''), source)],
-        dest: path.join(file.dest, source)
+    file.src.forEach(function (pattern) {
+      var sources = glob.sync(pattern, { cwd: file.cwd })
+      sources.forEach(function (source) {
+        expandedFiles.push({
+          src: [path.join((file.cwd ? file.cwd : ''), source)],
+          dest: path.join(file.dest, source)
+        })
       })
     })
   })
+
   return expandedFiles
 }
 
